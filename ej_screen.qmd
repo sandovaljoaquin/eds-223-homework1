@@ -1,0 +1,69 @@
+---
+title: "Ventura County EJ Screen"
+format: html
+author: Joaquin Sandoval
+---
+
+```{r, message=FALSE}
+
+library(tidyverse)
+library(sf)
+library(here)
+library(tmap)
+
+# Read in geodatabase of EJScreen data at the Census Block Group level
+
+ejscreen <- sf::st_read(here::here("data", "ejscreen","EJSCREEN_2023_BG_StatePct_with_AS_CNMI_GU_VI.gdb")) 
+
+# Filter to state of California
+california <- ejscreen |> 
+  dplyr::filter(ST_ABBREV == "CA") 
+
+# Filter to Ventura County
+ventura <- ejscreen |> 
+  dplyr::filter(CNTY_NAME %in% c("Ventura County"))
+
+# Read in city boundary data with city names for Ventura County
+
+city_boundary <- sf:: st_read(here::here("data", "City_Boundary", "City_Boundary.shp"))
+
+```
+
+Below are two different maps conveying information about Ventura County which is located in Southern California between Santa Barbara county to the north and Los Angeles County in the south. Much like its northern and southern neighbors, Ventura County houses a diverse population of people and wealth disparities are very evident across city lines and within cities themselves. In the first map below, I chose to plot the Percent Low Income variable. Low income is defined as less than or equal to twice the poverty level which is a national number and the same across geographic regions. It is clear that many areas of Ventura County have a large Percent of Low Income Individuals (80-100%), particularly south of San Buenaventura and in large areas of Oxnard. I was interested if there was overlap of Air Toxic Cancer Risk (Lifetime cancer risk from inhalation of air toxics per million people) because of the presence of many agricultural fields along the 101 freeway in Oxnard and Camarillo and low-income areas which often surround them. The second map displays That across Ventura County, the Air Toxics Cancer Risk is about 20-29 ppm. In areas of Camarillo and Oxnard that value is higher at 30-39 ppm, and some areas within Oxnard have values of significantly values of 40-60 ppm. It is clear that in these low-income areas, the risk for developing Cancer due to inhalation of air toxics is higher than in higher income areas. 
+
+```{r, message=FALSE}
+tmap_mode("view") 
+
+tm_shape(ventura) +
+  tm_polygons(fill = "P_LOWINCPCT",
+              fill.scale = tm_scale(values = "YlOrBr"),
+              fill.legend = tm_legend(title = "Percent Low Income")) +
+
+tm_shape(city_boundary) + 
+  tm_text("city_name", size = 1.5) + 
+  
+tm_layout(title = "Ventura County Low Income") + 
+tm_scalebar() + 
+tm_compass(position = c("left", "bottom")) + 
+tm_minimap()
+
+```
+
+```{r, message=FALSE}
+tmap_mode("view")
+  tm_shape(ventura) +
+  tm_polygons(fill = "CANCER",
+              fill.scale = tm_scale(values = "YlOrBr"),
+              fill.legend = tm_legend(title = "Air Toxics Cancer Risk")) + 
+
+tm_shape(city_boundary) + 
+  tm_text("city_name", size = 1.5) + 
+
+tm_layout(title = "Ventura County Air Toxics Cancer Risk (persons per million) ") + 
+tm_scalebar() + 
+tm_compass(position = c("left", "bottom")) + 
+tm_minimap() 
+
+```
+
+
