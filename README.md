@@ -1,6 +1,6 @@
 # EDS 223 Homework Assignment #1 
 
-Purpose: The purpose of this repository is to house assignment 1 for EDS 223 in which I explored environmental injustice in Ventura County. 
+Purpose: The purpose of this repository is to explore environmental injustice in Ventura County with the EPA EJ Screen data. This is for EDS 223 assignment 1. 
 
 Content:
 - data folder
