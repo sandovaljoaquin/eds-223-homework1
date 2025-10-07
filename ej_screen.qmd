@@ -37,35 +37,74 @@ city_boundary <- sf:: st_read(here::here("data", "City_Boundary", "City_Boundary
 ## Visualize Data 
 
 ```{r}
-tmap_mode("view") 
+# Switch mode to t_map viewing mode to interactive 
+
+tmap_mode("view")
+```
+
+
+```{r}
+# Map 1
+
+# Plot using Ventura County boundaries using ventura data and tm_polygons() filled with Percent Low Income variable
 
 tm_shape(ventura) +
   tm_polygons(fill = "P_LOWINCPCT",
-              fill.scale = tm_scale(values = "YlOrBr"),
-              fill.legend = tm_legend(title = "Percent Low Income")) +
+          
+          # Incorporating color scale  
+          
+              fill.scale = tm_scale(values = "YlOrBr"), 
+          
+          # Adjust legend title
+          
+              fill.legend = tm_legend(title = "Percent Low Income")) +  
+  
+  #Plotting only the city names from the city_boundary data and adjusting text size 
 
-tm_shape(city_boundary) + 
+tm_shape(city_boundary) +  
   tm_text("city_name", size = 1.5) + 
+  
+  # Adding map title, scalebar, compass, and minimap 
   
 tm_layout(title = "Ventura County Low Income") + 
 tm_scalebar() + 
+  
+  # Compass position to lower left 
+  
 tm_compass(position = c("left", "bottom")) + 
 tm_minimap()
 
 ```
 
 ```{r}
-tmap_mode("view")
+# Map 2 
+
+# Plot using Ventura County boundaries using ventura data and tm_polygons() filled with Air Toxics Cancer Risk 
+
   tm_shape(ventura) +
   tm_polygons(fill = "CANCER",
+              
+               # Incorporating the same color scale  
+              
               fill.scale = tm_scale(values = "YlOrBr"),
+              
+              # Updating the legend title 
+              
               fill.legend = tm_legend(title = "Air Toxics Cancer Risk")) + 
+  
+  # Again, plotting only the city names from the city_boundary data and adjusting text size 
 
 tm_shape(city_boundary) + 
   tm_text("city_name", size = 1.5) + 
+  
+
+   # Adding map title, scalebar, compass, and minimap
 
 tm_layout(title = "Ventura County Air Toxics Cancer Risk (persons per million) ") + 
 tm_scalebar() + 
+  
+  # Dropping compass position to lower left 
+  
 tm_compass(position = c("left", "bottom")) + 
 tm_minimap() 
 
